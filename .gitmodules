@@ -1,0 +1,3 @@
+[submodule "jenkenv/jenkinsfile-runner"]
+	path = jenkenv/jenkinsfile-runner
+	url = git@github.com:kohsuke/jenkinsfile-runner.git
