@@ -31,7 +31,10 @@ import zipfile
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 USER_DIR = os.getcwd()
 JENKENV_DIR = os.path.expanduser('~/.jenkenv')
-RUNNER_PATH = f'{ROOT_DIR}/jenkinsfile-runner/app/target/appassembler/bin/jenkinsfile-runner'
+VERSIONS_DIR = f'{JENKENV_DIR}/versions'
+GLOBAL_VERSION_PATH = f'{JENKENV_DIR}/.jenkins_version'
+LOCAL_VERSION_PATH = f'{USER_DIR}/.jenkins_version'
+RUNNER_PATH  = f'{ROOT_DIR}/jenkinsfile-runner/app/target/appassembler/bin/jenkinsfile-runner'
 DOWNLOAD_URL = 'https://updates.jenkins-ci.org/download/war'
 processes = list()
 
@@ -61,9 +64,12 @@ def check():
     if not os.path.isdir(JENKENV_DIR):
         print(f'{JENKENV_DIR} is not present; creating now...')
         os.mkdir(JENKENV_DIR)
+    if not os.path.isdir(VERSIONS_DIR):
+        print(f'{VERSIONS_DIR} is not present; creating now...')
+        os.mkdir(VERSIONS_DIR)
 
 def list_installed():
-    installed = os.listdir(JENKENV_DIR)
+    installed = os.listdir(VERSIONS_DIR)
     if not installed:
         print('no jenkins.war files installed')
     else:
@@ -105,30 +111,29 @@ def run(jenkinsfile, version=None):
         raise Exception('version must be specified')
     if not os.path.isabs(jenkinsfile):
         jenkinsfile = f'{USER_DIR}/{jenkinsfile}'
-    path = f'{JENKENV_DIR}/{version}'
+    path = f'{VERSIONS_DIR}/{version}'
     sh(f'{RUNNER_PATH} -w {path}/jenkins -p {path}/jenkins_home/plugins -f {jenkinsfile}')
 
 def run_jenkins(version=None):
     version = version or _version()
     if not version:
         raise Exception('version must be specified')
-    path = f'{JENKENV_DIR}/{version}'
+    path = f'{VERSIONS_DIR}/{version}'
     os.environ['JENKINS_HOME'] = f'{path}/jenkins_home'
     sh(f'java -jar {path}/jenkins.war')
 
 def use(scope, version):
-    path = f'{JENKENV_DIR}/.jenkins_version'
-    if scope == 'local':
-        path = f'{USER_DIR}/.jenkins_version'
+    root = USER_DIR if scope == 'local' else JENKENV_DIR
+    path = f'{root}/.jenkins_version'
     print(f'setting version at {path}')
     with open(path, 'w') as version_file:
         version_file.write(version)
 
-def clean(version):
+def clean(version=None):
     version = version or _version()
     if not version:
         raise Exception('version must be specified')
-    path = f'{JENKENV_DIR}/{version}/jenkins_home'
+    path = f'{VERSIONS_DIR}/{version}/jenkins_home'
     rmtree(path)
     os.mkdir(path)
     print(f'cleaned jenkins-{version}')
@@ -139,7 +144,7 @@ def list_available():
     parser.feed(str(resp.read()))
 
 def _unzip_war(version):
-    path = f'{JENKENV_DIR}/{version}'
+    path = f'{VERSIONS_DIR}/{version}'
     zip_ref = zipfile.ZipFile(f'{path}/jenkins.war', 'r')
     zip_ref.extractall(f'{path}/jenkins')
     zip_ref.close()
@@ -147,7 +152,7 @@ def _unzip_war(version):
 def install(version):
     print(f'installing jenkins-{version}...')
     url = f'{DOWNLOAD_URL}/{version}/jenkins.war'
-    path = f'{JENKENV_DIR}/{version}'
+    path = f'{VERSIONS_DIR}/{version}'
     if not os.path.isdir(path):
         os.mkdir(path)
     urllib.request.urlretrieve(url, f'{path}/jenkins.war')
@@ -156,7 +161,7 @@ def install(version):
 
 def uninstall(version):
     print(f'uninstalling jenkins-{version}...')
-    path = f'{JENKENV_DIR}/{version}'
+    path = f'{VERSIONS_DIR}/{version}'
     rmtree(path)
     print(f'uninstalled jenkins-{version}')
 

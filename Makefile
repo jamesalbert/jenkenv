@@ -12,3 +12,7 @@ clean:
 package: clean
 	python setup.py sdist bdist_wheel
 	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+
+install-locally:
+	python setup.py install
+	pyenv rehash

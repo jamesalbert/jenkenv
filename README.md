@@ -88,38 +88,38 @@ List installed versions. => denotes the local version, * denotes global
 `jenkenv run <jenkinsfile> [<version>]`
 
 - `<jenkinsfile>`: path to target Jenkinsfile
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `[<version>]`: optional version if local or global version is set; required otherwise.
 
 Run the given Jenkinsfile through jenkinsfile-runner.
 
 `jenkenv run-jenkins [<version>]`
 
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `[<version>]`: optional version if local or global version is set; required otherwise.
 
 Run Jenkins serving at [http://localhost:8080](http://localhost:8080). You'll want to do this and install your desired plugins first before running `jenkenv run ...`.
 
 `jenkenv use (local|global) <version>`
 
 - `(local|global)`: If local is set, `.jenkins_version` will be created in your current directory. If global is set, `~/.jenkins_version` will be created and used when `./.jenkins_version` isn't present.
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `[<version>]`: optional version if local or global version is set; required otherwise.
 
 Select the version of Jenkins you want to use.
 
 `jenkenv clean [<version>]`
 
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `[<version>]`: optional version if local or global version is set; required otherwise.
 
 Clears out `~/.jenkenv/<version>/jenkins_home`. Useful when you want to restart the plugin process without re-installing.
 
 `jenkenv install (-l|<version>)`
 
 - `-l`: list install-able versions.
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `<version>`: version to install
 
 Either list all install-able versions or install the specified version.
 
 `jenkenv uninstall <version>`
 
-- `[version]`: optional version if local or global version is set; required otherwise.
+- `<version>`: version to uninstall
 
 Uninstall the specified version.
