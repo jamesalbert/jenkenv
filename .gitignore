@@ -1,0 +1,4 @@
+jenkenv.egg-info
+.jenkins_version
+dist
+build
