@@ -34,7 +34,7 @@ jenkenv install 2.121.3
 jenkenv use local 2.121.3
 ```
 
-Now you'll want to install your plugins. Just run: `jenkenv run-jenkins`. The administrator password will output to stdout.
+Now you'll want to install your plugins. Run: `jenkenv run-jenkins` and wait for the administrator password, go to [http://localhost:8080](http://localhost:8080), install your plugins, and then stop Jenkins.
 
 If we have a `Jenkinsfile` like:
 
