@@ -3,8 +3,8 @@
 .PHONY: build-runner
 
 package-runner:
-	cd jenkinsfile-runner && git pull
-	docker run -v `pwd`/jenkinsfile-runner:/src -w /src maven:3.5.2 mvn package
+	cd jenkenv/jenkinsfile-runner && git pull
+	docker run -v `pwd`/jenkenv/jenkinsfile-runner:/src -w /src maven:3.5.2 mvn package
 
 clean:
 	rm -rf build dist jenkenv.egg-info
