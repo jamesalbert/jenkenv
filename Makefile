@@ -3,7 +3,7 @@
 .PHONY: build-runner
 
 package-runner:
-	cd jenkenv/jenkinsfile-runner && git pull
+	git submodule update --recursive --remote
 	docker run -v `pwd`/jenkenv/jenkinsfile-runner:/src -w /src maven:3.5.2 mvn package
 
 clean:
